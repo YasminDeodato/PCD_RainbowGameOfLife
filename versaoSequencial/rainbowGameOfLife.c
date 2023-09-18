@@ -141,10 +141,20 @@ void geracao(float **matriz, float **copia, int n) {
             int vivos = contaCelula(matriz, i, j, n);
             // printf("%f - %d, %d - Vivos %d\n", matriz[i][j], i, j, vivos);
 
+
+            //qualquer celula morta com 3 (tres) vizinhos torna-se viva;
             if ((matriz[i][j] == 0.0) && (vivos == 3)) {
                 copia[i][j] = mediaCelula(matriz, i, j, n);
+            
+            //qualquer celula viva com 2 (dois) ou 3 (tres) vizinhos deve sobreviver;
+            //seu valor permanece o mesmo ou reseta pra 1.0?
             } else if ((matriz[i][j] > 0.0) && ((vivos == 2) || (vivos == 3))) {
                 copia[i][j] = 1.0;
+            } 
+
+            //qualquer outro caso, celulas vivas devem morrer e celulas ja mortas devem continuar mortas.
+            else {
+                copia[i][j] = 0.0;
             }
         }
     }
@@ -183,7 +193,7 @@ int interacoes(float **matriz, float nGeracoes, int n) {
 
         // printMatriz(matriz, n);
         // printf("____________________\n");
-        printf("\nGeracao n %d - Celulas vivas: %d", i+1, contaCelulasVivas(matriz, n));
+        printf("Geracao n %d - Celulas vivas: %d\n", i+1, contaCelulasVivas(matriz, n));
     }
 
     int contador = contaCelulasVivas(matriz, n);
@@ -192,7 +202,7 @@ int interacoes(float **matriz, float nGeracoes, int n) {
 
 
 void main() {
-    int n = 50;
+    int n = 2048;
     float** matriz=(float**)malloc(sizeof(float*)*n);
     for (int i = 0; i < n; i++){
         matriz[i] = (float*)malloc(sizeof(float)*n);
@@ -203,8 +213,8 @@ void main() {
     glider(matriz, 1, 1);
     rPentomino(matriz, 10, 30);
 
-    int resultado = interacoes(matriz, 20, n);
-    printMatriz(matriz, n);
+    int resultado = interacoes(matriz, 5, n);
+    //printMatriz(matriz, n);
     printf("____________________\n");
     printf("resultado: %d\n", resultado);
 }
