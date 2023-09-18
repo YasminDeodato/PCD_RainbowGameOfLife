@@ -158,6 +158,16 @@ void copiaMatrizes(float **matriz, float ** copia, int n) {
     }
 }
 
+int contaCelulasVivas(float **matriz, int n) {
+    int contador = 0;
+    for(int i = 0 ; i <= n-1; i++){   
+        for(int j = 0; j <= n-1; j++){
+            if(matriz[i][j] > 0.0) contador++;
+        }
+    }
+    return contador;
+}
+
 int interacoes(float **matriz, float nGeracoes, int n) {
     float** copia = (float**)malloc(sizeof(float*)*n);
     for (int i = 0; i < n; i++){
@@ -173,15 +183,10 @@ int interacoes(float **matriz, float nGeracoes, int n) {
 
         // printMatriz(matriz, n);
         // printf("____________________\n");
+        printf("\nGeracao n %d - Celulas vivas: %d", i+1, contaCelulasVivas(matriz, n));
     }
 
-    int contador = 0;
-    for(int i = 0 ; i <= n-1; i++){   
-        for(int j = 0; j <= n-1; j++){
-            if(matriz[i][j] > 0.0)contador++;
-        }
-    }
-
+    int contador = contaCelulasVivas(matriz, n);
     return contador;
 }
 
