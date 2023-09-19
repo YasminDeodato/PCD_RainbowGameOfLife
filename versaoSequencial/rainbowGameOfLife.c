@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
 
 void printMatriz(float **matriz, int n) {
     for( int i = 0; i < n; i++){
@@ -100,7 +101,7 @@ float mediaCelula(float **matriz, int x, int y, int n){
 }
 
 void glider(float **matriz, int x, int y) { // x == 0 no glider e y == 0 no glider
-    // matriz[x][y] = 0.0;
+    /*// matriz[x][y] = 0.0;
     matriz[x+1][y] = 1.0;
     // matriz[x+2][y] = 0.0;
     // matriz[x][y+1] = 0.0;
@@ -108,9 +109,9 @@ void glider(float **matriz, int x, int y) { // x == 0 no glider e y == 0 no glid
     matriz[x+2][y+1] = 1.0;
     matriz[x][y+2] = 1.0;
     matriz[x+1][y+2] = 1.0;
-    matriz[x+2][y+2] = 1.0;
+    matriz[x+2][y+2] = 1.0;*/
 
-    /* Glinger girado
+    //Glinger girado
     // matriz[x  ][y  ] = 0.0;
     matriz[x  ][y+1] = 1.0;
     // matriz[x  ][y+2] = 0.0;
@@ -120,7 +121,6 @@ void glider(float **matriz, int x, int y) { // x == 0 no glider e y == 0 no glid
     matriz[x+2][y] = 1.0;
     matriz[x+2][y+1] = 1.0;
     matriz[x+2][y+2] = 1.0;
-     */
 }
 
 void rPentomino(float **matriz, int x, int y) { // x == 0 no rPentomino e y == 0 no rPentomino
@@ -202,7 +202,10 @@ int interacoes(float **matriz, float nGeracoes, int n) {
 
 
 void main() {
+    clock_t tempoInicial;
+    double tempoTotalSegundos;
     int n = 2048;
+
     float** matriz=(float**)malloc(sizeof(float*)*n);
     for (int i = 0; i < n; i++){
         matriz[i] = (float*)malloc(sizeof(float)*n);
@@ -213,8 +216,13 @@ void main() {
     glider(matriz, 1, 1);
     rPentomino(matriz, 10, 30);
 
-    int resultado = interacoes(matriz, 5, n);
+    tempoInicial = clock();
+    int resultado = interacoes(matriz, 100, n);
+    tempoTotalSegundos = ((double)clock() - tempoInicial)/ CLOCKS_PER_SEC;
+
     //printMatriz(matriz, n);
+
     printf("____________________\n");
     printf("resultado: %d\n", resultado);
+    printf("tempo de execucao: %f segundos\n", tempoTotalSegundos);
 }
