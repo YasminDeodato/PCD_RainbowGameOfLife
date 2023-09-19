@@ -7,11 +7,18 @@ Hélio Didzec Júnior \
 Yasmin Beatriz Deodato
 
 ### Informações
-Compilar
+
+#### 0️⃣ Compilar
 ```bash
-gcc -o rainbow RaibowGameOfLife.c
+# versao sequencial
+gcc -o rainbow rainbowGameOfLife.c
+# versao concorrente - pthreads
+gcc -o rainbow rainbowGameOfLife.c -lpthread
+# versao concorrente - openmp
+gcc -o rainbow rainbowGameOfLife.c -fopenmp
 ```
-Executar
+#### 1️⃣ Executar
 ```bash
 ./rainbow
+time ./rainbow
 ```
