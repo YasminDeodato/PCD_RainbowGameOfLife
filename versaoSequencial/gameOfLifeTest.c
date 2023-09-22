@@ -93,10 +93,12 @@ void rPentomino(int **matriz, int x, int y) { // x == 0 no rPentomino e y == 0 n
     // matriz[x+2][y+2] = 0;
 }
 
-void copiaMatrizes(int **matriz, int ** copia) {
-    float **aux = matriz;
-    matriz = copia;
-    copia = aux;
+void copiaMatrizes(int **matriz, int ** copia, int n) {
+    for(int i = 0 ; i <= n-1; i++){   
+        for(int j = 0; j <= n-1; j++){
+            copia[i][j] = matriz[i][j];
+        }
+    }
 }
 
 
@@ -122,11 +124,11 @@ void interacoes(int **matriz, int nGeracoes, int n) {
     }
 
     for(int i = 0 ; i < nGeracoes; i++){   
-        copiaMatrizes(matriz, copia);
+        copiaMatrizes(matriz, copia, n);
         
         geracao(matriz, copia, n);
 
-        copiaMatrizes(copia, matriz);
+        copiaMatrizes(copia, matriz, n);
 
         printMatriz(matriz, n);
         printf("____________________\n");

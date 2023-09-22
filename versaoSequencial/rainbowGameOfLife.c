@@ -160,10 +160,12 @@ void geracao(float **matriz, float **copia, int n) {
     }
 }
 
-void copiaMatrizes(float **matriz, float ** copia) {
-    float **aux = matriz;
-    matriz = copia;
-    copia = aux;
+void copiaMatrizes(float **matriz, float ** copia, int n) {
+    for(int i = 0 ; i <= n-1; i++){   
+        for(int j = 0; j <= n-1; j++){
+            copia[i][j] = matriz[i][j];
+        }
+    }
 }
 
 int contaCelulasVivas(float **matriz, int n) {
@@ -183,11 +185,11 @@ int interacoes(float **matriz, float nGeracoes, int n) {
     }
 
     for(int i = 0 ; i < nGeracoes; i++){   
-        copiaMatrizes(matriz, copia);
+        copiaMatrizes(matriz, copia, n);
         
         geracao(matriz, copia, n);
 
-        copiaMatrizes(copia, matriz);
+        copiaMatrizes(copia, matriz, n);
 
         // printMatriz(matriz, n);
         // printf("____________________\n");
