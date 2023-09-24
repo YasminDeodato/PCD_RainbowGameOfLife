@@ -1,13 +1,21 @@
-#include <stdio.h>
+/*
+* Programacao Concorrente e Distribuida
+* Rainbow Game of Life com Pthreads
+* Helio Didzec Junior
+* Yasmin Beatriz Deodato
+*/
 #include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <time.h>
 #include <pthread.h>
 
-#define NTHREADS 4
+#define NTHREADS 8
 #define N 2048
-#define GERACOES 2000
+#define GERACOES 500
 
-float **matriz;
-float **copia;
+float **matrizP;
+float **copiaP;
 int resultado[NTHREADS] = {0};
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -117,14 +125,11 @@ void rPentomino(float **matriz, int x, int y) {
 
 float verificarNovoEstadoCelula(float **matriz, int n, int i, int j) {
     int vivos = contaCelula(matriz, i, j, n);
-    // printf("%f - %d, %d - Vivos %d\n", matriz[i][j], i, j, vivos);
-
 
     //qualquer celula morta com 3 (tres) vizinhos torna-se viva;
     if ((matriz[i][j] == 0.0) && (vivos == 3)) {
         return mediaCelula(matriz, i, j, n);
     //qualquer celula viva com 2 (dois) ou 3 (tres) vizinhos deve sobreviver;
-    //seu valor permanece o mesmo ou reseta pra 1.0?
     } else if ((matriz[i][j] > 0.0) && ((vivos == 2) || (vivos == 3))) {
         return 1.0;
     } 
@@ -144,17 +149,20 @@ void copiaMatrizes(float **matriz, float ** copia, int n) {
 
 void *percorrerMatriz(void *arg) {
     long threadID = (long)arg;
-    int elementosPorThread = (N * N) / NTHREADS;
-    int inicio = threadID * elementosPorThread;
-    int fim = (threadID == NTHREADS - 1) ? (N * N) : (threadID + 1) * elementosPorThread;
+    int passo = floor(N/NTHREADS);
+    int inicio = passo * threadID;
+    int fim = passo * (threadID + 1);
     int vivosLocal = 0;
 
-    for (int i = inicio; i < fim; i++) {
-        int linha = i / N;
-        int coluna = i % N;
-        copia[linha][coluna] = verificarNovoEstadoCelula(matriz, N, linha, coluna);
-                
-        if (copia[linha][coluna] > 0.0) vivosLocal++; 
+    if (fim > N){
+        fim = N;
+    }
+
+    for (int i = 0; i < N; i++) {
+        for (int j = inicio; j < fim; j++){
+            copiaP[i][j] = verificarNovoEstadoCelula(matrizP, N, i, j);
+            if (copiaP[i][j] > 0.0) vivosLocal++; 
+        }
     }
 
     pthread_mutex_lock(&mutex);
@@ -170,17 +178,17 @@ int main() {
     double tempoTotalSegundos;
     int vivosPorGeracao = 0;
 
-    matriz=(float**)malloc(sizeof(float*)*N);
-    copia=(float**)malloc(sizeof(float*)*N);
+    matrizP=(float**)malloc(sizeof(float*)*N);
+    copiaP=(float**)malloc(sizeof(float*)*N);
     
     for (int i = 0; i < N; i++){
-        matriz[i] = (float*)malloc(sizeof(float)*N);
-        copia[i] = (float*)malloc(sizeof(float)*N);
+        matrizP[i] = (float*)malloc(sizeof(float)*N);
+        copiaP[i] = (float*)malloc(sizeof(float)*N);
     }
 
-    zeraMatriz(matriz, N);
-    glider(matriz, 1, 1);
-    rPentomino(matriz, 10, 30);
+    zeraMatriz(matrizP, N);
+    glider(matrizP, 1, 1);
+    rPentomino(matrizP, 10, 30);
 
     tempoInicial = clock();
     for (int g=0; g < GERACOES; g++) {
@@ -203,7 +211,7 @@ int main() {
             }
         }
 
-        copiaMatrizes(copia, matriz, N);
+        copiaMatrizes(copiaP, matrizP, N);
 
         // soma as celulas vivas contadas por cada thread
         vivosPorGeracao = 0;

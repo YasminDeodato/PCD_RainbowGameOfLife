@@ -1,3 +1,9 @@
+/*
+* Programacao Concorrente e Distribuida
+* Rainbow Game of Life com Openmp
+* Helio Didzec Junior
+* Yasmin Beatriz Deodato
+*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -126,13 +132,11 @@ void rPentomino(float **matriz, int x, int y) {
 
 float verificarNovoEstadoCelula(float **matriz, int i, int j) {
     int vivos = contaCelula(matriz, i, j);
-    // printf("%f - %d, %d - Vivos %d\n", matriz[i][j], i, j, vivos);
 
     //qualquer celula morta com 3 (tres) vizinhos torna-se viva;
     if ((matriz[i][j] == 0.0) && (vivos == 3)) {
         return mediaCelula(matriz, i, j);
     //qualquer celula viva com 2 (dois) ou 3 (tres) vizinhos deve sobreviver;
-    //seu valor permanece o mesmo ou reseta pra 1.0?
     } else if ((matriz[i][j] > 0.0) && ((vivos == 2) || (vivos == 3))) {
         return 1.0;
     } 
@@ -167,9 +171,6 @@ int interacoes(float **matriz) {
         }
 
         copiaMatrizes(copia, matriz);
-
-        // printMatriz(matriz);
-        // printf("____________________\n");
         printf("Geracao n %d - Celulas vivas: %d\n", g+1, vivos);
     }
 
@@ -197,8 +198,6 @@ void main() {
     tempoInicial = clock();
     int resultado = interacoes(matriz);
     tempoTotalSegundos = ((double)clock() - tempoInicial)/ CLOCKS_PER_SEC;
-
-    //printMatriz(matriz, n);
 
     printf("____________________\n");
     printf("resultado: %d\n", resultado);
