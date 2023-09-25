@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
     glutDisplayFunc(desenha);
     desenha();
     rainbowGameOfLife();
-    // glutIdleFunc(atualizarEExibir);
+    glutIdleFunc(atualizarEExibir);
     glutMainLoop();
     return 0;
 }
