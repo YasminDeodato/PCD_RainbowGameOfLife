@@ -1,11 +1,9 @@
 /*
 * Programacao Concorrente e Distribuida
-* Rainbow Game of Life Serial
+* Rainbow Game of Life com Openmp
 * Helio Didzec Junior
 * Yasmin Beatriz Deodato
 */
-#include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
 #include <time.h>
 
@@ -134,7 +132,6 @@ int geracao(float **matriz, float **copia) {
         for(int j = 0; j <= N-1; j++){
             int vivos = contaCelula(matriz, i, j);
 
-
             //qualquer celula morta com 3 (tres) vizinhos torna-se viva;
             if ((matriz[i][j] == 0.0) && (vivos == 3)) {
                 copia[i][j] = mediaCelula(matriz, i, j);
@@ -165,24 +162,26 @@ void copiaMatrizes(float **matriz, float ** copia) {
     }
 }
 
-int interacoes(float **matriz) {
+
+int interacoes(float **matriz, int nGeracao) {   
     int vivosGeracao = 0;
-    for(int g = 0 ; g < GERACOES; g++){
+    if (nGeracao <= GERACOES) {
         vivosGeracao = geracao(matriz, copia);
 
         copiaMatrizes(copia, matriz);
 
-        printf("Geracao n %d - Celulas vivas: %d\n", g+1, vivosGeracao);
+        printf("Geracao n %d - Celulas vivas: %d\n", nGeracao, vivosGeracao);
     }
 
     return vivosGeracao;
 }
 
+void executaInteracao(int geracao) {
+    interacoes(matriz, geracao);
+}
 
-void main() {
-    clock_t tempoInicial;
-    double tempoTotalSegundos;
-
+// void main(int argc, char *argv[]) {
+void rainbowGameOfLife() {
     matriz=(float**)malloc(sizeof(float*)*N);
     copia = (float**)malloc(sizeof(float*)*N);
     for (int i = 0; i < N; i++){
@@ -194,12 +193,4 @@ void main() {
     zeraMatriz(matriz);
     glider(matriz, 1, 1);
     rPentomino(matriz, 10, 30);
-
-    tempoInicial = clock();
-    int resultado = interacoes(matriz);
-    tempoTotalSegundos = ((double)clock() - tempoInicial)/ CLOCKS_PER_SEC;
-
-    printf("____________________\n");
-    printf("resultado: %d\n", resultado);
-    printf("tempo de execucao: %f segundos\n", tempoTotalSegundos);
 }
